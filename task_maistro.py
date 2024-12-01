@@ -13,8 +13,10 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 from langchain_openai import ChatOpenAI
 
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.store.base import BaseStore
+from langgraph.store.memory import InMemoryStore
 
 import configuration
 
@@ -56,7 +58,7 @@ def extract_tool_info(tool_calls, schema_name="Memory"):
                         'type': 'update',
                         'doc_id': call['args']['json_doc_id'],
                         'planned_edits': call['args']['planned_edits'],
-                        'value': call['args']['patches'][0]['value']
+                        'value': call['args']['patches'][0].get('value')
                     })
                 else:
                     # Handle case where no changes were needed
